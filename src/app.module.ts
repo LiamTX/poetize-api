@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
+import { User } from './user/user.entity';
+import { UserModule } from './user/user.module';
 
 require('dotenv').config();
 
@@ -13,11 +15,13 @@ require('dotenv').config();
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DB,
-      entities: [],
+      entities: [User],
+      synchronize: true,
       extra: {
         trustServerCertificate: true,
       }
-    })
+    }),
+    UserModule
   ],
   controllers: [AppController],
   providers: [],
