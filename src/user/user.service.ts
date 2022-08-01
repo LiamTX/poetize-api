@@ -24,4 +24,8 @@ export class UserService {
     async update(id: string, data: IUpdateUserDto) {
         return await (await this.userRepository.update(id, data)).raw;
     }
+
+    async delete(id: string) {
+        return await this.userRepository.delete(id);
+    }
 }
