@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { ICreateUserDto } from './dto/create-user.dto';
+import { IUpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -18,5 +19,9 @@ export class UserService {
         delete user.password;
 
         return user;
+    }
+
+    async update(id: string, data: IUpdateUserDto) {
+        return await (await this.userRepository.update(id, data)).raw;
     }
 }
