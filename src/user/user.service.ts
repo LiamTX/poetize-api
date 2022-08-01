@@ -33,7 +33,11 @@ export class UserService {
         return await this.userRepository.findOne({ where: { username } });
     }
 
+    async findById(id: string): Promise<User> {
+        return await this.userRepository.findOneBy({ id });
+    }
+
     async findAll() {
-        return await this.userRepository.find();
+        return await this.userRepository.find({ relations: ['likedPoems'] });
     }
 }

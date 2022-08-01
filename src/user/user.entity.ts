@@ -1,5 +1,6 @@
 import { genSaltSync, hashSync } from "bcrypt";
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Poem } from "../poem/poem.entity";
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -18,6 +19,12 @@ export class User {
     @Column()
     password: string;
 
+    @OneToMany(type => Poem, poem => poem.user, { nullable: true })
+    poems?: Poem[];
+
+    @ManyToMany(() => Poem, (Poem) => Poem.likes)
+    likedPoems?: Poem[];
+
     @CreateDateColumn()
     created_at?: Date;
 
@@ -31,6 +38,5 @@ export class User {
     @BeforeInsert()
     hashPassword() {
         this.password = hashSync(this.password, genSaltSync());
-        console.log(this.password);
     }
 }

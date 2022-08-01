@@ -4,6 +4,8 @@ import { AppController } from './app.controller';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { PoemModule } from './poem/poem.module';
+import { Poem } from './poem/poem.entity';
 
 require('dotenv').config();
 
@@ -16,14 +18,15 @@ require('dotenv').config();
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DB,
-      entities: [User],
+      entities: [User, Poem],
       synchronize: true,
       extra: {
         trustServerCertificate: true,
       }
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    PoemModule
   ],
   controllers: [AppController],
   providers: [],
