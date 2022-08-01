@@ -17,17 +17,19 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put(':id')
-    async update(@Param('id') id: string, @Body() data: IUpdateUserDto) {
-        return await this.userService.update(id, data);
+    @Put()
+    async update(@Request() req, @Body() data: IUpdateUserDto) {
+        console.log(req.user)
+        return await this.userService.update(req.user.userId, data);
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete(':id')
-    async delete(@Param('id') id: string) {
-        return await this.userService.delete(id);
+    @Delete()
+    async delete(@Request() req) {
+        return await this.userService.delete(req.user.userId);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll() {
         return await this.userService.findAll();
