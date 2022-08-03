@@ -9,6 +9,8 @@ import { Poem } from './poem/poem.entity';
 
 require('dotenv').config();
 
+console.log(process.env.JWT_SECRET)
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({

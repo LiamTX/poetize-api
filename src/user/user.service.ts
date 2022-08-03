@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { compareSync, genSaltSync, hashSync } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { ICreateUserDto } from './dto/create-user.dto';
+import { IResetUserPasswordDto } from './dto/reset-user-password.dto';
 import { IUpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 
@@ -39,5 +41,21 @@ export class UserService {
 
     async findAll() {
         return await this.userRepository.find({ relations: ['likedPoems'] });
+    }
+
+    async resetPassword(userId: string, data: IResetUserPasswordDto) {
+        const { oldPassword, newPassword } = data;
+
+        const user = await this.userRepository.findOneBy({ id: userId });
+        if (!user) {
+            throw new HttpException('unauthorized', HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!compareSync(oldPassword, user.password)) {
+            throw new HttpException('unauthorized', HttpStatus.UNAUTHORIZED);
+        }
+
+        user.password = hashSync(newPassword, genSaltSync());
+        return await (await this.userRepository.update(user.id, user)).raw;
     }
 }

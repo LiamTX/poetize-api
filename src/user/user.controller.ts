@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Param, Post, Put, UseGuards, Request, Get } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ICreateUserDto } from './dto/create-user.dto';
+import { IResetUserPasswordDto } from './dto/reset-user-password.dto';
 import { IUpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -32,5 +33,11 @@ export class UserController {
     @Get()
     async findAll() {
         return await this.userService.findAll();
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('/pw')
+    async resetPassword(@Request() req, @Body() data: IResetUserPasswordDto) {
+        return await this.userService.resetPassword(req.user.userId, data);
     }
 }
